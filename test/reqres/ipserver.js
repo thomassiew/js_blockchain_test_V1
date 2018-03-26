@@ -5,7 +5,7 @@ var zmq = require('zmq')
 
 arrs = [];
 
-responder.bind('tcp://127.0.0.1:5433', function () {
+responder.bind('tcp://127.0.0.1:4100', function () {
     console.log('Listening for zmq requesters...');
 })
 responder.on('message', function (msg) {

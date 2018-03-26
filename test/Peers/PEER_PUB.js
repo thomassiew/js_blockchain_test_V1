@@ -19,7 +19,7 @@ class PUB {
         }, 1000);
 
         // Listen on TCP port 4000.
-        publisher.bind(`tcp://*:${port}`, function () {
+        publisher.bind(`tcp://0.0.0.0:${port}`, function () {
             console.log(`Listening for zmq subscribers... on tcp://*:${port}`);
             
         });

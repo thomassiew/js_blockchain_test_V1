@@ -11,6 +11,6 @@ setInterval(function () {
 }, 1000);
 
 // Listen on TCP port 5432.
-publisher.bind('tcp://*:5432', function (err) {
+publisher.bind('tcp://0.0.0.0:4300', function (err) {
     console.log('Listening for zmq subscribers...');
 });

@@ -1,6 +1,6 @@
 const
     zmq = require('zmq'),
-    publisher = zmq.socket('sub'),
+    subscriber = zmq.socket('sub'),
     requester = zmq.socket('req'),
     publicIp = require('public-ip');
 
@@ -11,42 +11,48 @@ subscriber.subscribe('');
 
 class SUB {
 
-    GetIPAddress() {
+    Subscribing(SVR_PORT, PEER_port) {
         // setting the connection ports and public IP :TODO IP PUBLIC functions
-        var PORT = "3222";
+        var PORT = PEER_port;
         var IP = publicIp.v4().then((IP) => {
-            requester.connect('tcp://127.0.0.1:5433');
-            console.log('Worker connected to port 5433');
+            requester.connect(`tcp://127.0.0.1:${SVR_PORT}`);
+            console.log(`Worker connected to port ${SVR_PORT}`);
 
             requester.on('message', function (msg) {
-                ar = [];
-                arr = msg.toString().split(",");
-                ar.push(arr);
-                console.log(ar.toString());
+                var arr = [];
+
+                var arr = msg.toString().split(",");
+                
+                
+                for (let item of arr) {
+                    console.log("Current item: " + item);
+                    if (item == `${IP}:${PORT}`) {
+                        console.log("Same ip , not adding");
+                    } else {
+                        console.log("diff ip , ");
+                        subscriber.connect(`tcp://${item}`);
+                        console.log("listening")
+                        
+                    }
+                }
+                
 
             });
 
             requester.send(
                 `${IP}:${PORT}`
             );
-            console.log(`${IP}:${PORT}`);
-        });
-    }
-
-    Subscribing() {
-        // Handle messages from publisher.
-        subscriber.on('message', function (data) {
-            let msg = JSON.parse(data);
-            console.log(msg.data);
+            subscriber.on('message', function (data) {
+                let msg = JSON.parse(data);
+                console.log(msg.data);
+    
+            });
+            
 
         });
 
-        // Connect to publisher.
-        subscriber.connect('tcp://localhost:4000');
-        console.log("listening")
-
+        
     }
-
 }
 
-/// res
+module.exports = SUB;
